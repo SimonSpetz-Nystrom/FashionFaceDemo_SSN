@@ -8,7 +8,7 @@
 </header>
 
 <div class="tracking">
-    <b>Currently tracking:</b> <input type="text" value="#FashionFace" id="tracking-input" />
+    <b>Currently tracking:</b> a (change in TwitterWatcher.cs until better way implemented)
 </div>
 <div class="tweetsPerHour">
     <b>Tweets per hour: </b> 11
@@ -20,7 +20,9 @@
     <b>Females per hour: </b> 3.14
 </div>
 @for (var i = 0; i < 10; i++)
-{ <img src="https://www.getdigital.eu/web/getdigital/gfx/products/__generated__resized/1100x1100/Aufkleber_Trollface.jpg" class="twitter-image" /> }
+{
+    <div class="twitter-image-container"></div> 
+}
 
 @section scripts {
     <!--Script references. -->

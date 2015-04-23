@@ -376,7 +376,6 @@
     </Content>
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Content\Site.css" />
-    <Content Include="Content\TodoList.css" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Scripts\app\twitterhub.js" />
     <Content Include="Images\accent.png" />
@@ -406,6 +405,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BetaFaceApi\BetaFaceApi.csproj">
+      <Project>{4C9ED35E-A44A-4C32-BC09-7EA181D7ACB7}</Project>
+      <Name>BetaFaceApi</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

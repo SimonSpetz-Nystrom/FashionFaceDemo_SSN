@@ -1,7 +1,8 @@
-﻿using FashionFaceMVC.Hubs;
-using Owin;
+﻿using Hubs;
 using Microsoft.Owin;
-[assembly: OwinStartup(typeof(Hubs.Startup))]
+using Owin;
+
+[assembly: OwinStartup(typeof(Startup))]
 namespace Hubs
 {
     public class Startup

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using System.Web;
 using Hubs;
 using Microsoft.AspNet.SignalR;
 using Tweetinvi;
@@ -16,6 +14,11 @@ namespace FashionFaceMVC.Hubs
         private static readonly Lazy<TwitterWatcher> mInstance = new Lazy<TwitterWatcher>(
             () => new TwitterWatcher(GlobalHost.ConnectionManager.GetHubContext<TwitterHub>()));
         private readonly IHubContext mContext;
+        private static readonly BetaFaceApi.BetaFaceApi mFaceApi =
+            new BetaFaceApi.BetaFaceApi(
+                "d45fd466-51e2-4701-8da8-04351c872236", 
+                "171e8465-f548-401d-b63b-caf0dc28df5f");
+
 
         private TwitterWatcher(IHubContext hubContext)
         {
@@ -28,7 +31,7 @@ namespace FashionFaceMVC.Hubs
             ThreadPool.QueueUserWorkItem(delegate
             {
                 var stream = Stream.CreateFilteredStream();
-                stream.AddTrack("Tower Hamlets");
+                stream.AddTrack("image");
                 stream.MatchingTweetReceived += OnMatchingTweetReceived;
                 stream.StartStreamMatchingAllConditions();
             }, null);
@@ -39,13 +42,34 @@ namespace FashionFaceMVC.Hubs
             get { return mInstance.Value; }
         }
 
-        private void OnMatchingTweetReceived(object sender, MatchedTweetReceivedEventArgs args)
+        private async void OnMatchingTweetReceived(object sender, MatchedTweetReceivedEventArgs args)
         {
             if (args.Tweet.Media != null && args.Tweet.Media.FirstOrDefault() != null)
             {
-                mContext.Clients.All.addImage(args.Tweet.Media[0].MediaURL);
+                var info = await mFaceApi.GetFaceInfoAsync(args.Tweet.Media[0].MediaURL);
+                if (info.faces != null)
+                {
+                    Debug.Print(info.faces.Count.ToString());
+                    var genders =
+                        (from face in info.faces
+                            select face.tags.SingleOrDefault(tag => tag.name == "gender")).ToList();
+
+                    genders.RemoveAll(elm => elm == null);
+
+                    var maleCount = genders.Count(elm => elm.value == "male");
+                    var femaleCount = genders.Count() - maleCount;
+
+                    if (maleCount > 0)
+                    {
+                        mContext.Clients.All.addMales(maleCount);
+                    }
+                    if (femaleCount > 0)
+                    {
+                        mContext.Clients.All.addFemales(femaleCount);
+                    }
+                }
+                mContext.Clients.All.addImage(args.Tweet.Media[0].MediaURL, args.Tweet.Media[0].DisplayURL);
             }
-            mContext.Clients.All.addNewMessageToPage(args.Tweet.Creator.ToString(), args.Tweet.Text);
         }
     }
 }

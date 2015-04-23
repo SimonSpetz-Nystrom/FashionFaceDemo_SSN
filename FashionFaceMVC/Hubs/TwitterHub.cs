@@ -1,11 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Web;
-using FashionFaceMVC.Hubs;
+﻿using FashionFaceMVC.Hubs;
 using Microsoft.AspNet.SignalR;
-using Tweetinvi;
-using Tweetinvi.Core.Events.EventArguments;
 using Tweetinvi.Core.Interfaces.Streaminvi;
 
 namespace Hubs
